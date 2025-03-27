@@ -18,7 +18,12 @@ jobs:
       - run: npm install
       - run: npm run build --if-present
       - run: ls -la
-      
+      - name: Upload compiled files
+        uses: actions/upload-artifact@v4
+        with:
+          name: lala_build
+          path: ./build
+          
   deploy:
     needs: build
     runs-on: ubuntu-latest
@@ -27,7 +32,10 @@ jobs:
       contents: read
       deployments: write
     steps:
-      - uses: actions/checkout@v4
+      - name: Download compiled files
+        uses: actions/download-artifact@v4
+        with:
+          name: lala_build
       - run: ls -la
       - name: Deploy
         uses: cloudflare/wrangler-action@v3
@@ -35,5 +43,3 @@ jobs:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: pages deploy ./build --project-name=lala-ai
-          # Optional: Enable this if you want to have GitHub Deployments triggered
-          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
