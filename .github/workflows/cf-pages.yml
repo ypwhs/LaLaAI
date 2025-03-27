@@ -28,11 +28,12 @@ jobs:
       deployments: write
     steps:
       - uses: actions/checkout@v4
+      - run: ls -la
       - name: Deploy
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy ./dist --project-name=lala-ai
+          command: pages deploy ./build --project-name=lala-ai
           # Optional: Enable this if you want to have GitHub Deployments triggered
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
